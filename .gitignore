@@ -1,2 +1,5 @@
 coverage
 Gemfile.lock
+
+#ignore idea folder
+/.idea
