@@ -4,9 +4,9 @@ require 'gilded_rose'
 describe "#update_quality" do
 
   context "with a single" do
-    Given(:initial_sell_in) { 5 }
+    Given(:initial_days_remaining) { 5 }
     Given(:initial_quality) { 10 }
-    Given(:item) { GildedRose.new(name, initial_sell_in, initial_quality  ) }
+    Given(:item) { GildedRose.for(name, initial_days_remaining, initial_quality) }
 
     When { item.update_quality }
 
@@ -14,19 +14,19 @@ describe "#update_quality" do
       Given(:name) { "NORMAL ITEM" }
 
 
-      Invariant { item.sell_in.should == initial_sell_in-1 }
+      Invariant { item.days_remaining.should == initial_days_remaining-1 }
 
       context "before sell date" do
         Then { item.quality.should == initial_quality-1 }
       end
 
       context "on sell date" do
-        Given(:initial_sell_in) { 0 }
+        Given(:initial_days_remaining) { 0 }
         Then { item.quality.should == initial_quality-2 }
       end
 
       context "after sell date" do
-        Given(:initial_sell_in) { -10 }
+        Given(:initial_days_remaining) { -10 }
         Then { item.quality.should == initial_quality-2 }
       end
 
@@ -39,7 +39,7 @@ describe "#update_quality" do
     context "Aged Brie" do
       Given(:name) { "Aged Brie" }
 
-      Invariant { item.sell_in.should == initial_sell_in-1 }
+      Invariant { item.days_remaining.should == initial_days_remaining-1 }
 
       context "before sell date" do
         Then { item.quality.should == initial_quality+1 }
@@ -51,7 +51,7 @@ describe "#update_quality" do
       end
 
       context "on sell date" do
-        Given(:initial_sell_in) { 0 }
+        Given(:initial_days_remaining) { 0 }
         Then { item.quality.should == initial_quality+2 }
 
         context "near max quality" do
@@ -66,7 +66,7 @@ describe "#update_quality" do
       end
 
       context "after sell date" do
-        Given(:initial_sell_in) { -10 }
+        Given(:initial_days_remaining) { -10 }
         Then { item.quality.should == initial_quality+2 }
 
         context "with max quality" do
@@ -80,19 +80,19 @@ describe "#update_quality" do
       Given(:initial_quality) { 80 }
       Given(:name) { "Sulfuras, Hand of Ragnaros" }
 
-      Invariant { item.sell_in.should == initial_sell_in }
+      Invariant { item.days_remaining.should == initial_days_remaining }
 
       context "before sell date" do
         Then { item.quality.should == initial_quality }
       end
 
       context "on sell date" do
-        Given(:initial_sell_in) { 0 }
+        Given(:initial_days_remaining) { 0 }
         Then { item.quality.should == initial_quality }
       end
 
       context "after sell date" do
-        Given(:initial_sell_in) { -10 }
+        Given(:initial_days_remaining) { -10 }
         Then { item.quality.should == initial_quality }
       end
     end
@@ -100,10 +100,10 @@ describe "#update_quality" do
     context "Backstage pass" do
       Given(:name) { "Backstage passes to a TAFKAL80ETC concert" }
 
-      Invariant { item.sell_in.should == initial_sell_in-1 }
+      Invariant { item.days_remaining.should == initial_days_remaining-1 }
 
       context "long before sell date" do
-        Given(:initial_sell_in) { 11 }
+        Given(:initial_days_remaining) { 11 }
         Then { item.quality.should == initial_quality+1 }
 
         context "at max quality" do
@@ -112,7 +112,7 @@ describe "#update_quality" do
       end
 
       context "medium close to sell date (upper bound)" do
-        Given(:initial_sell_in) { 10 }
+        Given(:initial_days_remaining) { 10 }
         Then { item.quality.should == initial_quality+2 }
 
         context "at max quality" do
@@ -122,7 +122,7 @@ describe "#update_quality" do
       end
 
       context "medium close to sell date (lower bound)" do
-        Given(:initial_sell_in) { 6 }
+        Given(:initial_days_remaining) { 6 }
         Then { item.quality.should == initial_quality+2 }
 
         context "at max quality" do
@@ -132,7 +132,7 @@ describe "#update_quality" do
       end
 
       context "very close to sell date (upper bound)" do
-        Given(:initial_sell_in) { 5 }
+        Given(:initial_days_remaining) { 5 }
         Then { item.quality.should == initial_quality+3 }
 
         context "at max quality" do
@@ -142,7 +142,7 @@ describe "#update_quality" do
       end
 
       context "very close to sell date (lower bound)" do
-        Given(:initial_sell_in) { 1 }
+        Given(:initial_days_remaining) { 1 }
         Then { item.quality.should == initial_quality+3 }
 
         context "at max quality" do
@@ -152,12 +152,12 @@ describe "#update_quality" do
       end
 
       context "on sell date" do
-        Given(:initial_sell_in) { 0 }
+        Given(:initial_days_remaining) { 0 }
         Then { item.quality.should == 0 }
       end
 
       context "after sell date" do
-        Given(:initial_sell_in) { -10 }
+        Given(:initial_days_remaining) { -10 }
         Then { item.quality.should == 0 }
       end
     end
@@ -166,10 +166,10 @@ describe "#update_quality" do
     #   before { pending }
     #   Given(:name) { "Conjured Mana Cake" }
     #
-    #   Invariant { item.sell_in.should == initial_sell_in-1 }
+    #   Invariant { item.days_remaining.should == initial_days_remaining-1 }
     #
     #   context "before the sell date" do
-    #     Given(:initial_sell_in) { 5 }
+    #     Given(:initial_days_remaining) { 5 }
     #     Then { item.quality.should == initial_quality-2 }
     #
     #     context "at zero quality" do
@@ -179,7 +179,7 @@ describe "#update_quality" do
     #   end
     #
     #   context "on sell date" do
-    #     Given(:initial_sell_in) { 0 }
+    #     Given(:initial_days_remaining) { 0 }
     #     Then { item.quality.should == initial_quality-4 }
     #
     #     context "at zero quality" do
@@ -189,7 +189,7 @@ describe "#update_quality" do
     #   end
     #
     #   context "after sell date" do
-    #     Given(:initial_sell_in) { -10 }
+    #     Given(:initial_days_remaining) { -10 }
     #     Then { item.quality.should == initial_quality-4 }
     #
     #     context "at zero quality" do
@@ -210,10 +210,10 @@ describe "#update_quality" do
   #     When { item.update_quality }
   #
   #     Then { item.quality.should == 9 }
-  #     Then { item.sell_in.should == 4 }
+  #     Then { item.days_remaining.should == 4 }
   #
   #     Then { item.quality.should == 11 }
-  #     Then { item.sell_in.should == 2 }
+  #     Then { item.days_remaining.should == 2 }
   #   end
   # end
 end
