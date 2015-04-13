@@ -6,9 +6,15 @@ class GildedRose
   end
 
   def update_quality
-
-    if name == 'NORMAL ITEM'
-      return normal
+    case name
+      when 'NORMAL ITEM'
+        return normal
+      when 'Aged Brie'
+        return brie
+      when 'Sulfuras, Hand of Ragnaros'
+        return sulfuras
+      when 'Backstage passes to a TAFKAL80ETC concert'
+        return backstage
     end
 
     if @name != 'Aged Brie' && @name != 'Backstage passes to a TAFKAL80ETC concert'
@@ -63,6 +69,27 @@ class GildedRose
     @quality -= 1 if @sell_in <= 0
   end
 
+  def brie
+    @sell_in -= 1
+    return if @quality >= 50
+    @quality += 1
+    @quality += 1 if @sell_in <= 0 && @quality < 50
+  end
+
+  def sulfuras
+
+  end
+
+  def backstage
+    @sell_in -= 1
+
+    return if @quality >= 50
+    return @quality = 0 if @sell_in < 0
+
+    @quality += 1
+    @quality += 1 if @sell_in < 10
+    @quality += 1 if @sell_in < 5
+  end
 end
 
 # DO NOT CHANGE THINGS BELOW -----------------------------------------
